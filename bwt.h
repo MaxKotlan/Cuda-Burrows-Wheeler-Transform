@@ -39,10 +39,10 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         return resa < resb;
     });
 
-    for (int i = 0; i < data.size(); i++){
+    for (int i = 0; i < k; i++){
         int r = sortedindex[i];
         if (r == 0) result.originalIndex = i;
-        result.data[i] = data[(-1 - r + data.size())%(data.size())];
+        result.data[i] = data[(-1 - r + k)%(k)];
     }
 
     return std::move(result);
