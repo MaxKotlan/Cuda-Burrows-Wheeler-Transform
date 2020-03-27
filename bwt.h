@@ -9,12 +9,21 @@ namespace BWT{
 struct TransformedData{
     int originalIndex;
     std::vector<unsigned char> data;
+
+    /*Move operator to only shallow copy data*/
+    TransformedData& operator=(const TransformedData& other) {
+        originalIndex = other.originalIndex;
+        data = std::move(other.data);
+        return *this;
+    }
 };
 
 TransformedData BWT(const std::vector<unsigned char>& data){
     int k = data.size();
     std::vector<int> sortedindex(k);
     std::vector<unsigned char> transformeddata(k);
+    TransformedData result;
+    result.data = std::move(transformeddata);
 
     for (int i = 0; i < k; i++)
         sortedindex[i] = i;
@@ -30,13 +39,13 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         return resa < resb;
     });
 
-    int originalIndex = 0;
     for (int i = 0; i < data.size(); i++){
         int r = sortedindex[i];
-        if (r == 0) originalIndex = i;
-        transformeddata[i] = data[(-1 - r + data.size())%(data.size())];
+        if (r == 0) result.originalIndex = i;
+        result.data[i] = data[(-1 - r + data.size())%(data.size())];
     }
-    return {originalIndex, std::move(transformeddata)};
+
+    return std::move(result);
 }
 
 }
