@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <time.h>
 #include "bwt.h"
 
 std::vector<unsigned char> readFileIntoBuffer(std::string filename){
@@ -26,9 +27,10 @@ int main(int argc, char** argv){
         std::cout << c;
 
     std::vector<unsigned char> lotr = readFileIntoBuffer("lotr.txt");
+    clock_t time = clock();
     BWT::TransformedData lotr_t = BWT::BWT(lotr);
-    for (auto c : lotr_t.data)
-        std::cout << c;
+    time = clock() - time;
+    std::cout << "Operation Took " << ((float)time)/CLOCKS_PER_SEC << " seconds" << std::endl;
 
 
 }
