@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
+#include "bwt.h"
 
 void printMatrix(std::vector<unsigned char>& data){
     int k =  data.size();
@@ -17,6 +17,7 @@ void printMatrix(std::vector<unsigned char>& data){
 void printSortedMatrix(std::vector<int>& indices, std::vector<unsigned char>& data){
     int k =  data.size();
     for (int i = 0; i < k; i++){
+        std::cout << i << ": ";
         for(int j = 0; j < k; j++){
             unsigned int l = j-indices[i]+k;
             std::cout << data[l%k];
@@ -76,14 +77,16 @@ void burrowswheeler(std::vector<unsigned char>& data){
 int main(int argc, char** argv){
 
     std::vector<unsigned char> data;
-
     
-    for (auto c : "^BANANA|")
+    for (auto c : "SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES")
         if (c != '\0')
             data.push_back(c);
-    //data.push_back('\0');
 
-    printMatrix(data);
     burrowswheeler(data);
+
+    BWT::TransformedData t = BWT::BWT(data);
+    std::cout << t.originalIndex << std::endl;
+    for (auto c : t.data)
+        std::cout << c;
 
 }
