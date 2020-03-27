@@ -7,7 +7,7 @@ void printMatrix(std::vector<unsigned char>& data){
     int k =  data.size();
     for (int i = 0; i < k; i++){
         for(int j = 0; j < k; j++){
-            unsigned int l = j-i;
+            unsigned int l = j-i+k;
             std::cout << data[l%k];
         }
         std::cout << std::endl;
@@ -18,7 +18,7 @@ void printSortedMatrix(std::vector<int>& indices, std::vector<unsigned char>& da
     int k =  data.size();
     for (int i = 0; i < k; i++){
         for(int j = 0; j < k; j++){
-            unsigned int l = j-indices[i];
+            unsigned int l = j-indices[i]+k;
             std::cout << data[l%k];
         }
         std::cout << std::endl;
@@ -41,12 +41,12 @@ std::vector<int> sortIndex(std::vector<unsigned char>& data){
     std::sort(indices.begin(), indices.end(), [&](int a, int b){
         unsigned int resa = 0; unsigned int resb = 0;
         for (int i = 0; i < k && resa == resb; i++){
-            unsigned int la = i-a;
-            unsigned int lb = i-b;
-            resa += data[(la)%(k)]+ (UINT_MAX - 8*i*sizeof(unsigned char));
-            resb += data[(lb)%(k)]+ (UINT_MAX - 8*i*sizeof(unsigned char));
+            unsigned int la = i-a+k;
+            unsigned int lb = i-b+k;
+            resa += data[(la)%(k)]+ (k*8*sizeof(unsigned char) - 8*i*sizeof(unsigned char));
+            resb += data[(lb)%(k)]+ (k*8*sizeof(unsigned char) - 8*i*sizeof(unsigned char));
         }
-        return resa <= resb;
+        return resa < resb;
     } );
 
     return std::move(indices);
@@ -68,7 +68,7 @@ void burrowswheeler(std::vector<unsigned char>& data){
     }*/
     std::cout << std::endl << "Transform: ";
     for (int i = 0; i < data.size(); i++)
-        std::cout << data[(-1 - indices[i])%(data.size())];
+        std::cout << data[(-1 - indices[i] + data.size())%(data.size())];
 
 
 }
@@ -78,13 +78,12 @@ int main(int argc, char** argv){
     std::vector<unsigned char> data;
 
     
-    for (auto c : "^BANANA@")
+    for (auto c : "^BANANA|")
         if (c != '\0')
             data.push_back(c);
     //data.push_back('\0');
 
     printMatrix(data);
-
     burrowswheeler(data);
 
 }
