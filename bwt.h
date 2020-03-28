@@ -35,8 +35,8 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         for (int i = 0; i < k && resa == resb; i++){
             unsigned int la = i-a+k;
             unsigned int lb = i-b+k;
-            resa += data[(la)%(k)]+ (k*8*sizeof(unsigned char) - 8*i*sizeof(unsigned char));
-            resb += data[(lb)%(k)]+ (k*8*sizeof(unsigned char) - 8*i*sizeof(unsigned char));
+            resa += data[(la)%(k)];
+            resb += data[(lb)%(k)];
         }
         return resa < resb;
     });
@@ -48,6 +48,10 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     }
 
     return std::move(result);
+}
+
+std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
+    return std::vector<unsigned char>(0);
 }
 
 TransformedData BWT(std::string input){
