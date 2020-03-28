@@ -3,6 +3,16 @@
 #include <algorithm>
 #include <iostream>
 
+
+/*
+Space Complexity O(3N)
+Computation Complexity ? (less than o(n^2) on average)
+When testing with LOTR.txt, N = 3311317 and the number of primative operations
+was ~509734982 which is only ~153 times large than n. Although it was ~7 time larger than log(3311317) [base 2]
+When testing with data that was all the same, it always resulted in O(n^2). 
+So It is somewhere between O(nlog(n)) and O(n^2) and largely depends on the data. Not the most efficent probably.
+Did not use suffix arrays at all.
+*/
 TransformedData BWT(const std::vector<unsigned char>& data){
     unsigned int k = data.size();
     std::vector<unsigned int> sortedindex(k);
