@@ -5,7 +5,7 @@ void Test(std::string input, std::string assertoutput, std::string resource){
     std::cout << std::endl;
     std::cout << "Source: " <<  resource << std::endl;
     std::cout << "Testing: " << input << std::endl;
-    auto result = BWT::BWT(input);
+    auto result = BWT(input);
     std::cout << "Result:  ";
     std::string output;
     for (auto c : result.data ){
