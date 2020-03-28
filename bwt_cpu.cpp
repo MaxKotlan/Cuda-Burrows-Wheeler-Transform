@@ -34,7 +34,29 @@ TransformedData BWT(const std::vector<unsigned char>& data){
 }
 
 std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
-    return std::vector<unsigned char>(0);
+    unsigned int k = transformdata.data.size();
+    std::vector<std::vector<unsigned char>> original(k);
+    for (int i = 0; i < k; i++){
+        for (int p = 0; p < k; p++)
+            original[p].push_back(transformdata.data[p]);
+        
+        std::sort(original.begin(), original.end(), [&](std::vector<unsigned char>& a, std::vector<unsigned char>& b){
+            unsigned int resa = 0; unsigned int resb = 0;
+            for (int z = 0; z < i+1 && resa == resb; z++){
+                resa += a[i];
+                resb += b[i];
+            }
+            return resa < resb;
+        });
+    }
+
+    for (auto v : original){
+        for (auto c : v)
+            std::cout << c;
+        std::cout << std::endl;
+    }
+
+    return transformdata.data;
 }
 
 TransformedData BWT(std::string input){
