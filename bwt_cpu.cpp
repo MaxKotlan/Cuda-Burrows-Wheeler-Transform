@@ -10,20 +10,23 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     TransformedData result;
     result.data = std::move(transformeddata);
 
+    /*vector of row indices*/
     for (unsigned int i = 0; i < k; i++)
         sortedindex[i] = i;
 
+    /*sort rows lexicographically*/
     std::sort(sortedindex.begin(), sortedindex.end(), [&](unsigned int a, unsigned int b){
-        unsigned int resa = 0; unsigned int resb = 0;
-        for (int i = 0; i < k && resa == resb; i++){
+        unsigned char diffa = 0; unsigned char diffb = 0;
+        for (int i = 0; i < k && diffa == diffb; i++){
             unsigned int la = i-a+k;
             unsigned int lb = i-b+k;
-            resa += data[(la)%(k)];
-            resb += data[(lb)%(k)];
+            diffa = data[(la)%(k)];
+            diffb = data[(lb)%(k)];
         }
-        return resa < resb;
+        return diffa < diffb;
     });
 
+    /*Find Original Index and Copy to Output Buffer*/
     for (unsigned int i = 0; i < k; i++){
         unsigned int r = sortedindex[i];
         if (r == 0) result.originalIndex = i;
