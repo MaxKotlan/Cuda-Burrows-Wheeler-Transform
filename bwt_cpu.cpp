@@ -36,6 +36,7 @@ TransformedData BWT(const std::vector<unsigned char>& data){
 std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
     unsigned int k = transformdata.data.size();
     std::vector<std::vector<int>> original(k);
+    std::vector<unsigned char> data(k);
     for (int i = 0; i < k; i++){
         for (int p = 0; p < k; p++)
             original[p].push_back(p);
@@ -50,8 +51,8 @@ std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
         });
 
         for (int h = 0; h < k; h++) {
-            for (int p = 0; p < i; p++)
-                std::cout << transformdata.data[original[h][p]];
+            for (int p = 0; p <= i; p++)
+                std::cout << original[h][p] << " ";//<< transformdata.data[original[h][p]] << " ";
             std::cout << std::endl;
         }
         std::cout << std::endl;
@@ -60,12 +61,15 @@ std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
 
     for (int j = 0; j < original.size(); j++){
         std::cout << j << ": ";
-        for(int c = 0; c < original.size(); c++)
+        for(int c = 0; c < original.size(); c++){
             std::cout << transformdata.data[original[j][c]];
+            if (transformdata.originalIndex ==  j)
+            data[original.size()-1 - c] = transformdata.data[original[j][c]];
+        }
         std::cout << std::endl;
     }
 
-    return transformdata.data;
+    return data;
 }
 
 TransformedData BWT(std::string input){
