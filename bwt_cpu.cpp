@@ -14,7 +14,7 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     for (unsigned int i = 0; i < k; i++)
         sortedindex[i] = i;
 
-    /*sort rows lexicographically*/
+    /*sort row indicies by 'row' (inplace row calculation) lexicographically*/
     std::sort(sortedindex.begin(), sortedindex.end(), [&](unsigned int a, unsigned int b){
         unsigned char diffa = 0; unsigned char diffb = 0;
         for (int i = 0; i < k && diffa == diffb; i++){
