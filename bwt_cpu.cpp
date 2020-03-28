@@ -5,13 +5,16 @@
 
 TransformedData BWT(const std::vector<unsigned char>& data){
     unsigned int k = data.size();
+    unsigned int primitive_ops = 0;
     std::vector<unsigned int> sortedindex(k);
     std::vector<unsigned char> transformeddata(k);
     TransformedData result;
     result.data = std::move(transformeddata);
 
-    for (unsigned int i = 0; i < k; i++)
+    for (unsigned int i = 0; i < k; i++){
         sortedindex[i] = i;
+        //primitive_ops++;
+    }
 
     std::sort(sortedindex.begin(), sortedindex.end(), [&](unsigned int a, unsigned int b){
         unsigned int resa = 0; unsigned int resb = 0;
@@ -20,6 +23,7 @@ TransformedData BWT(const std::vector<unsigned char>& data){
             unsigned int lb = i-b+k;
             resa += data[(la)%(k)];
             resb += data[(lb)%(k)];
+            primitive_ops++;
         }
         return resa < resb;
     });
@@ -28,8 +32,9 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         unsigned int r = sortedindex[i];
         if (r == 0) result.originalIndex = i;
         result.data[i] = data[(-1 - r + k)%(k)];
+        //primitive_ops++;
     }
-
+    std::cout << "Input: " << k << " Primative Operations: " << primitive_ops << std::endl;
     return std::move(result);
 }
 

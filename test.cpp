@@ -18,6 +18,11 @@ void Test(std::string input, std::string assertoutput, std::string resource){
 }
 
 int main(){
+    Test("AAAAAAA",  "AAAAAAA", "My brain");
+    Test("AAAAAAAAAAA",  "AAAAAAAAAAA", "My brain");
+    Test(" !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",  " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", "My brain");
+    Test("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "My brain");
+    Test("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Z123456789ABCDEFGHIJKLMNOPQRSTUVWXY", "My brain");
     Test("123456@", "@123456", "My brain");
     Test("^BANANA|", "BNN^AA|A", "https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform");
     Test("banana$", "annb$aa", "https://www.geeksforgeeks.org/burrows-wheeler-data-transform-algorithm/");
@@ -28,4 +33,5 @@ int main(){
     PrintUnsortedMatrix("^BANANA|");
     std::cout << std::endl << "Sorted Matrix: " << std::endl;;
     PrintSortedMatrix("^BANANA|");
+    assert(BWT("^BANANA|").originalIndex == 6);
 }
