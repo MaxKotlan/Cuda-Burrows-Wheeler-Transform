@@ -40,7 +40,7 @@ int main(){
     testRandom(10);
     //PrintUnsortedMatrix("BANANA");
     //PrintSortedMatrix("BANANA");
-
-    INVERSE_BWT(BWT("^BANANA|"));
+    std::cout << BWT("SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES").originalIndex << std::endl;
+    INVERSE_BWT(BWT("SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES"));
 
 }
