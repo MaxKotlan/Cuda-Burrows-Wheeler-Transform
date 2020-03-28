@@ -21,14 +21,14 @@ int main(int argc, char** argv){
         if (c != '\0')
             data.push_back(c);
 
-    BWT::TransformedData t = BWT::BWT(data);
+    TransformedData t = BWT(data);
     std::cout << t.originalIndex << std::endl;
     for (auto c : t.data)
         std::cout << c;
 
     std::vector<unsigned char> lotr = readFileIntoBuffer("lotr.txt");
     clock_t time = clock();
-    BWT::TransformedData lotr_t = BWT::BWT(lotr);
+    TransformedData lotr_t = BWT(lotr);
     time = clock() - time;
     std::cout << "Operation Took " << ((float)time)/CLOCKS_PER_SEC << " seconds" << std::endl;
     std::cout << lotr_t.originalIndex;
