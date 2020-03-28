@@ -17,7 +17,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 
 int main(int argc, char** argv){
     std::vector<unsigned char> data;
-    for (auto c : "SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES")
+    for (auto c : "^BANANA@")
         if (c != '\0')
             data.push_back(c);
 
@@ -31,6 +31,8 @@ int main(int argc, char** argv){
     BWT::TransformedData lotr_t = BWT::BWT(lotr);
     time = clock() - time;
     std::cout << "Operation Took " << ((float)time)/CLOCKS_PER_SEC << " seconds" << std::endl;
-
+    std::cout << lotr_t.originalIndex;
+    //for (auto c : lotr_t.data)
+     //   std::cout << c;
 
 }
