@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
+#include <time.h>
 
 namespace BWT{
 
@@ -46,6 +48,13 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     }
 
     return std::move(result);
+}
+
+TransformedData BWT(std::string input){
+    std::vector<unsigned char> data(input.size());
+    for (int i = 0; i < input.size(); i++)
+        data[i] = input[i];
+    return std::move(BWT(data));
 }
 
 }

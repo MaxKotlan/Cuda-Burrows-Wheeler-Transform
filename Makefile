@@ -1,2 +1,6 @@
-all:
+all: main test
+
+main: main.cpp
 	nvcc -o BWT main.cpp
+test: test.cpp
+	nvcc -o TestBWT test.cpp
