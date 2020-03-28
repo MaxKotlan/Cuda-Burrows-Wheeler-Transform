@@ -9,7 +9,7 @@
 namespace BWT{
 
 struct TransformedData{
-    int originalIndex;
+    unsigned int originalIndex;
     std::vector<unsigned char> data;
 
     /*Move operator to only shallow copy data*/
@@ -21,16 +21,16 @@ struct TransformedData{
 };
 
 TransformedData BWT(const std::vector<unsigned char>& data){
-    int k = data.size();
-    std::vector<int> sortedindex(k);
+    unsigned int k = data.size();
+    std::vector<unsigned int> sortedindex(k);
     std::vector<unsigned char> transformeddata(k);
     TransformedData result;
     result.data = std::move(transformeddata);
 
-    for (int i = 0; i < k; i++)
+    for (unsigned int i = 0; i < k; i++)
         sortedindex[i] = i;
 
-    std::sort(sortedindex.begin(), sortedindex.end(), [&](int a, int b){
+    std::sort(sortedindex.begin(), sortedindex.end(), [&](unsigned int a, unsigned int b){
         unsigned int resa = 0; unsigned int resb = 0;
         for (int i = 0; i < k && resa == resb; i++){
             unsigned int la = i-a+k;
@@ -41,8 +41,8 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         return resa < resb;
     });
 
-    for (int i = 0; i < k; i++){
-        int r = sortedindex[i];
+    for (unsigned int i = 0; i < k; i++){
+        unsigned int r = sortedindex[i];
         if (r == 0) result.originalIndex = i;
         result.data[i] = data[(-1 - r + k)%(k)];
     }
