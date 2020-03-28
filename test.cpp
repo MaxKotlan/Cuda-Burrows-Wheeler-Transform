@@ -1,4 +1,5 @@
 #include "bwt.h"
+#include "bwt_debug.h"
 #include <assert.h>
 
 void Test(std::string input, std::string assertoutput, std::string resource){
@@ -17,7 +18,14 @@ void Test(std::string input, std::string assertoutput, std::string resource){
 }
 
 int main(){
+    Test("123456@", "@123456", "My brain");
     Test("^BANANA|", "BNN^AA|A", "https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform");
     Test("banana$", "annb$aa", "https://www.geeksforgeeks.org/burrows-wheeler-data-transform-algorithm/");
     Test("SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES", "TEXYDST.E.IXIXIXXSSMPPS.B..E.S.EUSFXDIIOIIIT", "https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform");
+
+    std::cout << std::endl << "Source: https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform:" << std::endl;
+    std::cout << "Unsorted Matrix: " << std::endl;;
+    PrintUnsortedMatrix("^BANANA|");
+    std::cout << std::endl << "Sorted Matrix: " << std::endl;;
+    PrintSortedMatrix("^BANANA|");
 }

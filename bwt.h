@@ -19,5 +19,4 @@ struct TransformedData{
 };
 #include "bwt_cpu.h"
 #include "bwt_cuda.h"
-
 #endif
