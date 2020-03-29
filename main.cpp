@@ -17,7 +17,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 
 int main(int argc, char** argv){
     std::vector<unsigned char> data;
-    for (auto c : "^BANANA@")
+    for (auto c : "@123456789")
         if (c != '\0')
             data.push_back(c);
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv){
 
     std::vector<unsigned char> lotr = readFileIntoBuffer("lotr.txt");
     clock_t time = clock();
-    TransformedData lotr_t = BWT(lotr);
+    TransformedData lotr_t = BWT_CUDA(data);
     time = clock() - time;
     std::cout << "Operation Took " << ((float)time)/CLOCKS_PER_SEC << " seconds" << std::endl;
     std::cout << lotr_t.originalIndex;
