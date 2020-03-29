@@ -35,6 +35,17 @@ __device__ bool sortcompare( const unsigned int& a, const unsigned int& b, unsig
     return diffa < diffb;
 }
 
+__device__ void BitonicMerge(KernelParameters parameters) {
+    unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
+    for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
+        for (unsigned int j = k / 2; j>0; j /= 2){
+            if (parameters.indices[i]>parameters.indices[i+j])
+                swap(parameters.indices[i], parameters.indices[i+j]);
+            __syncthreads();
+        }
+    }
+}
+
 __device__ void BWTBitonicSort(KernelParameters parameters){
     unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
 
@@ -60,6 +71,7 @@ __device__ void BWTBitonicSort(KernelParameters parameters){
             __syncthreads();
         }
     }
+    BitonicMerge(parameters);
 }
 
 __global__ void Main_Kernel_BWT(KernelParameters parameters){
@@ -67,7 +79,7 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
     
     if (idx < parameters.datasize){
         /*Initalize Indices to the integers*/
-        parameters.indices[idx] = idx*idx%parameters.datasize;
+        parameters.indices[idx] = idx%parameters.datasize;
         __syncthreads();
 
         /*Sort Indices Using a Bitonic Sort*/
