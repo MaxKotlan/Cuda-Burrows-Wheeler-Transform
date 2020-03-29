@@ -15,25 +15,22 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
         return std::move(buffer);
 }
 
-int main(int argc, char** argv){
+void CompareCpuAndKernel(std::string testdata){
     std::vector<unsigned char> data;
-    for (auto c : "SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIX")
+    for (auto c : testdata)
         if (c != '\0')
             data.push_back(c);
-
-    TransformedData t = BWT(data);
-    std::cout << t.originalIndex << std::endl;
+    auto t = BWT(data);
+    std::cout << "Cpu Version: " << std::endl;
     for (auto c : t.data)
         std::cout << c;
     std::cout << std::endl;
+    std::cout << "Gpu Version: " << std::endl;
+    BWT_CUDA(data);
+    std::cout << std::endl;
+}
 
-    //std::vector<unsigned char> lotr = readFileIntoBuffer("lotr.txt");
-    clock_t time = clock();
-    TransformedData lotr_t = BWT_CUDA(data);
-    time = clock() - time;
-    std::cout << "Operation Took " << ((float)time)/CLOCKS_PER_SEC << " seconds" << std::endl;
-    std::cout << lotr_t.originalIndex;
-    //for (auto c : lotr_t.data)
-     //   std::cout << c;
-
+int main(int argc, char** argv){
+    CompareCpuAndKernel("0123456789ABCDEF");
+    CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
 }

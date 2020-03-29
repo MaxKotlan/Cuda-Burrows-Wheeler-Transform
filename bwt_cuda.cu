@@ -24,6 +24,17 @@ __device__ void swap ( unsigned int& a, unsigned int& b )
     b=c;
 }
 
+__device__ bool sortcomparetest( const unsigned int& a, const unsigned int& b, unsigned char* input, unsigned int datasize){
+    unsigned char diffa = 0; unsigned char diffb = 0;
+    for (int i = 0; i < datasize && diffa == diffb; i++){
+        unsigned int la = i-a+datasize;
+        unsigned int lb = i-b+datasize;
+        diffa = input[(la)%(datasize)];
+        diffb = input[(lb)%(datasize)];
+    }
+    return diffa > diffb;
+}
+
 __device__ bool sortcompare( const unsigned int& a, const unsigned int& b, unsigned char* input, unsigned int datasize){
     unsigned char diffa = 0; unsigned char diffb = 0;
     for (int i = 0; i < datasize && diffa == diffb; i++){
@@ -39,11 +50,12 @@ __device__ void BitonicMerge(KernelParameters parameters) {
     unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
     for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
         for (unsigned int j = k / 2; j>0; j /= 2){
-            //if(sortcompare(parameters.indices[i+j], parameters.indices[i], parameters.input, parameters.datasize))
-            if (parameters.indices[i]>parameters.indices[i+j])
+            if(sortcompare(parameters.indices[i+j], parameters.indices[i], parameters.input, parameters.datasize))
+            //if (parameters.indices[i]>parameters.indices[i+j])
                 swap(parameters.indices[i], parameters.indices[i+j]);
             __syncthreads();
         }
+        __syncthreads();
     }
 }
 
@@ -55,16 +67,16 @@ __device__ void BitonicSort(KernelParameters parameters){
             unsigned int ixj = i ^ j;
             if ((ixj)>i) {
                 if ((i&k)==0) {
-                    //if(sortcompare(parameters.indices[ixj], parameters.indices[i], parameters.input, parameters.datasize)){
-                    if (parameters.indices[i]>parameters.indices[ixj]) {
+                    if(sortcomparetest(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
+                    //if (parameters.indices[i]>parameters.indices[ixj]) {
                     //if (atomicMax(&parameters.indices[i], parameters.indices[ixj]) == )
                         swap(parameters.indices[i], parameters.indices[ixj]);
                     }
                 }
                 if ((i&k)!=0) {
                     /* Sort descending */
-                    //if (sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
-                    if (parameters.indices[i]<parameters.indices[ixj]) {
+                    if (sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
+                    //if (parameters.indices[i]<parameters.indices[ixj]) {
                         swap(parameters.indices[i], parameters.indices[ixj]); 
                     }
                 }
@@ -84,6 +96,7 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
 
         /*Sort Indices Using a Bitonic Sort*/
         BitonicSort(parameters);
+        __syncthreads();
         BitonicMerge(parameters);
         __syncthreads();
 
@@ -92,9 +105,26 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
     }
 }
 
+#include <cassert>
+
+int isPowerOfTwo (unsigned int x)
+{
+ return (
+   x == 1 || x == 2 || x == 4 || x == 8 || x == 16 || x == 32 ||
+   x == 64 || x == 128 || x == 256 || x == 512 || x == 1024 ||
+   x == 2048 || x == 4096 || x == 8192 || x == 16384 ||
+   x == 32768 || x == 65536 || x == 131072 || x == 262144 ||
+   x == 524288 || x == 1048576 || x == 2097152 ||
+   x == 4194304 || x == 8388608 || x == 16777216 ||
+   x == 33554432 || x == 67108864 || x == 134217728 ||
+   x == 268435456 || x == 536870912 || x == 1073741824 ||
+   x == 2147483648);
+}
+
 TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     unsigned char* device_input = nullptr; unsigned char* device_output = nullptr; unsigned int* device_indices = nullptr;
     unsigned int k = input.size();
+    assert(isPowerOfTwo(k));
     std::vector<unsigned char> output(k); std::vector<unsigned int> indices(k);
 
     gpuErrchk(cudaMalloc((void **)&device_input,   k*sizeof(unsigned char)));
