@@ -53,10 +53,13 @@ __device__ void BWTBitonicSort(KernelParameters parameters){
                         swap(parameters.indices[i], parameters.indices[ixj]);                          
                     }
                 }
+                __syncthreads();
+
             }   
-            __syncthreads();
+            //__syncthreads();
         }
         __syncthreads();
+
     }
 }
 
@@ -106,7 +109,7 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     gpuErrchk(cudaFree(device_input)); gpuErrchk(cudaFree(device_indices)); gpuErrchk(cudaFree(device_output));
 
     for (auto c: indices)
-        std::cout << c;
+        std::cout << c << " ";
     std::cout << std::endl;
 
     for (auto c: output)

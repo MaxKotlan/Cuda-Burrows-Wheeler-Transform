@@ -37,7 +37,7 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     });
 
     for (auto c: sortedindex)
-        std::cout << c;
+        std::cout << c << " ";
     std::cout << std::endl;
 
     /*Find Original Index and Copy to Output Buffer*/
