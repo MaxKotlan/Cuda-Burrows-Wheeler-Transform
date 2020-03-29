@@ -39,6 +39,7 @@ __device__ void BitonicMerge(KernelParameters parameters) {
     unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
     for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
         for (unsigned int j = k / 2; j>0; j /= 2){
+            //if(sortcompare(parameters.indices[i+j], parameters.indices[i], parameters.input, parameters.datasize))
             if (parameters.indices[i]>parameters.indices[i+j])
                 swap(parameters.indices[i], parameters.indices[i+j]);
             __syncthreads();
@@ -46,7 +47,7 @@ __device__ void BitonicMerge(KernelParameters parameters) {
     }
 }
 
-__device__ void BWTBitonicSort(KernelParameters parameters){
+__device__ void BitonicSort(KernelParameters parameters){
     unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
 
     for (unsigned int k = 2; k <= parameters.datasize; k <<= 1){
@@ -71,7 +72,6 @@ __device__ void BWTBitonicSort(KernelParameters parameters){
             __syncthreads();
         }
     }
-    BitonicMerge(parameters);
 }
 
 __global__ void Main_Kernel_BWT(KernelParameters parameters){
@@ -83,7 +83,8 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
         __syncthreads();
 
         /*Sort Indices Using a Bitonic Sort*/
-        BWTBitonicSort(parameters);
+        BitonicSort(parameters);
+        BitonicMerge(parameters);
         __syncthreads();
 
         /*Convert Input Parameters to Output Parameters Using Sorted Indices*/
