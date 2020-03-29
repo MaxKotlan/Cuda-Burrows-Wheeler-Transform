@@ -34,23 +34,29 @@ __device__ bool sortcompare( const unsigned int a, const unsigned int b, unsigne
 }
 
 __device__ void BWTBitonicSort(KernelParameters parameters){
-    unsigned int idx = blockDim.x * blockIdx.x + threadIdx.x;
+    unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
 
     for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
         for (unsigned int j = k / 2; j>0; j /= 2){
-            unsigned int ixj = idx ^ j;
-            if (ixj > idx){
-                if ((idx & k) == 0)
-                    if (sortcompare(parameters.indices[ixj], parameters.indices[idx], parameters.input, parameters.datasize))
-                    //if (parameters.indices[idx] > parameters.indices[ixj])
-                        swap(parameters.indices[idx], parameters.indices[ixj]);
-                else
-                    if (sortcompare(parameters.indices[idx], parameters.indices[ixj], parameters.input, parameters.datasize))
-                    //if (parameters.indices[idx] < parameters.indices[ixj])
-                        swap(parameters.indices[idx], parameters.indices[ixj]);
-            }
+            unsigned int ixj = i ^ j;
+            if ((ixj)>i) {
+                if ((i&k)==0) {
+                    if(sortcompare(parameters.indices[ixj], parameters.indices[i], parameters.input, parameters.datasize)){
+                    //if (parameters.indices[i]>parameters.indices[ixj]) {
+                        swap(parameters.indices[i], parameters.indices[ixj]);
+                    }
+                }
+                if ((i&k)!=0) {
+                    /* Sort descending */
+                    if (sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
+                    //if (parameters.indices[i]<parameters.indices[ixj]) {
+                        swap(parameters.indices[i], parameters.indices[ixj]);                          
+                    }
+                }
+            }   
             __syncthreads();
         }
+        __syncthreads();
     }
 }
 
@@ -74,7 +80,7 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
 TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     unsigned char* device_input = nullptr; unsigned char* device_output = nullptr; unsigned int* device_indices = nullptr;
     unsigned int k = input.size();
-    std::vector<unsigned char> output(k);
+    std::vector<unsigned char> output(k); std::vector<unsigned int> indices(k);
 
     gpuErrchk(cudaMalloc((void **)&device_input,   k*sizeof(unsigned char)));
     gpuErrchk(cudaMalloc((void **)&device_output,  k*sizeof(unsigned char)));
@@ -96,7 +102,12 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     gpuErrchk(cudaEventSynchronize(stop));
 
     gpuErrchk(cudaMemcpy(output.data(), device_output, k*sizeof(unsigned char), cudaMemcpyDeviceToHost));
+    gpuErrchk(cudaMemcpy(indices.data(), device_indices, k*sizeof(unsigned int), cudaMemcpyDeviceToHost));
     gpuErrchk(cudaFree(device_input)); gpuErrchk(cudaFree(device_indices)); gpuErrchk(cudaFree(device_output));
+
+    for (auto c: indices)
+        std::cout << c;
+    std::cout << std::endl;
 
     for (auto c: output)
         std::cout << c;
