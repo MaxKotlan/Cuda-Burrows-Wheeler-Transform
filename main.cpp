@@ -17,7 +17,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 
 int main(int argc, char** argv){
     std::vector<unsigned char> data;
-    for (auto c : "@123456789")
+    for (auto c : "^BANNANA|")
         if (c != '\0')
             data.push_back(c);
 
@@ -25,6 +25,7 @@ int main(int argc, char** argv){
     std::cout << t.originalIndex << std::endl;
     for (auto c : t.data)
         std::cout << c;
+    std::cout << std::endl;
 
     std::vector<unsigned char> lotr = readFileIntoBuffer("lotr.txt");
     clock_t time = clock();

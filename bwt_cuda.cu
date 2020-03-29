@@ -17,12 +17,45 @@ struct KernelParameters{
     unsigned int  datasize;
 };
 
-__device__ void BWTBitonicSort(KernelParameters parameters){
+__device__ void swap ( unsigned int& a, unsigned int& b )
+{
+    unsigned int c(a); a=b; b=c;
+}
 
+__device__ bool sortcompare( const unsigned int a, const unsigned int b, unsigned char* input, unsigned int datasize){
+    unsigned char diffa = 0; unsigned char diffb = 0;
+    for (int i = 0; i < datasize && diffa == diffb; i++){
+        unsigned int la = i-a+datasize;
+        unsigned int lb = i-b+datasize;
+        diffa = input[(la)%(datasize)];
+        diffb = input[(lb)%(datasize)];
+    }
+    return diffa < diffb;
+}
+
+__device__ void BWTBitonicSort(KernelParameters parameters){
+    unsigned int idx = blockDim.x * blockIdx.x + threadIdx.x;
+
+    for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
+        for (unsigned int j = k / 2; j>0; j /= 2){
+            unsigned int ixj = idx ^ j;
+            if (ixj > idx){
+                if ((idx & k) == 0)
+                    if (sortcompare(parameters.indices[ixj], parameters.indices[idx], parameters.input, parameters.datasize))
+                    //if (parameters.indices[idx] > parameters.indices[ixj])
+                        swap(parameters.indices[idx], parameters.indices[ixj]);
+                else
+                    if (sortcompare(parameters.indices[idx], parameters.indices[ixj], parameters.input, parameters.datasize))
+                    //if (parameters.indices[idx] < parameters.indices[ixj])
+                        swap(parameters.indices[idx], parameters.indices[ixj]);
+            }
+            __syncthreads();
+        }
+    }
 }
 
 __global__ void Main_Kernel_BWT(KernelParameters parameters){
-    int idx = blockDim.x * blockIdx.x + threadIdx.x;
+    unsigned int idx = blockDim.x * blockIdx.x + threadIdx.x;
     
     if (idx < parameters.datasize){
         /*Initalize Indices to the integers*/
