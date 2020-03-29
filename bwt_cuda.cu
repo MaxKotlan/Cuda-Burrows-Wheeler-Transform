@@ -19,10 +19,12 @@ struct KernelParameters{
 
 __device__ void swap ( unsigned int& a, unsigned int& b )
 {
-    unsigned int c(a); a=b; b=c;
+    unsigned int c = a; 
+    a=b; 
+    b=c;
 }
 
-__device__ bool sortcompare( const unsigned int a, const unsigned int b, unsigned char* input, unsigned int datasize){
+__device__ bool sortcompare( const unsigned int& a, const unsigned int& b, unsigned char* input, unsigned int datasize){
     unsigned char diffa = 0; unsigned char diffb = 0;
     for (int i = 0; i < datasize && diffa == diffb; i++){
         unsigned int la = i-a+datasize;
@@ -36,8 +38,8 @@ __device__ bool sortcompare( const unsigned int a, const unsigned int b, unsigne
 __device__ void BWTBitonicSort(KernelParameters parameters){
     unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
 
-    for (unsigned int k = 2; k <= parameters.datasize; k *= 2){
-        for (unsigned int j = k / 2; j>0; j /= 2){
+    for (unsigned int k = 2; k <= parameters.datasize; k <<= 1){
+        for (unsigned int j=k>>1; j>0; j=j>>1){
             unsigned int ixj = i ^ j;
             if ((ixj)>i) {
                 if ((i&k)==0) {
