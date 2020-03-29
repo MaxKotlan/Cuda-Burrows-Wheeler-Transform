@@ -43,25 +43,22 @@ __device__ void BWTBitonicSort(KernelParameters parameters){
             unsigned int ixj = i ^ j;
             if ((ixj)>i) {
                 if ((i&k)==0) {
-                    if(sortcompare(parameters.indices[ixj], parameters.indices[i], parameters.input, parameters.datasize)){
-                    //if (parameters.indices[i]>parameters.indices[ixj]) {
+                    //if(sortcompare(parameters.indices[ixj], parameters.indices[i], parameters.input, parameters.datasize)){
+                    if (parameters.indices[i]>parameters.indices[ixj]) {
+                    //if (atomicMax(&parameters.indices[i], parameters.indices[ixj]) == )
                         swap(parameters.indices[i], parameters.indices[ixj]);
                     }
                 }
                 if ((i&k)!=0) {
                     /* Sort descending */
-                    if (sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
-                    //if (parameters.indices[i]<parameters.indices[ixj]) {
-                        swap(parameters.indices[i], parameters.indices[ixj]);                          
+                    //if (sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize)){
+                    if (parameters.indices[i]<parameters.indices[ixj]) {
+                        swap(parameters.indices[i], parameters.indices[ixj]); 
                     }
                 }
-                __syncthreads();
-
             }   
-            //__syncthreads();
+            __syncthreads();
         }
-        __syncthreads();
-
     }
 }
 
@@ -70,7 +67,7 @@ __global__ void Main_Kernel_BWT(KernelParameters parameters){
     
     if (idx < parameters.datasize){
         /*Initalize Indices to the integers*/
-        parameters.indices[idx] = idx;
+        parameters.indices[idx] = idx*idx%parameters.datasize;
         __syncthreads();
 
         /*Sort Indices Using a Bitonic Sort*/
