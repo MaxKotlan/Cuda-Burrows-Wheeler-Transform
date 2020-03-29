@@ -151,7 +151,7 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     KernelParameters parameters = { device_input, device_output, device_indices, k };
     
     gpuErrchk(cudaEventRecord(start));
-    unsigned int threadsperblock = 1024;
+    unsigned int threadsperblock = 4;
     Main_Kernel_BWT<<< k/threadsperblock+1, threadsperblock>>>(parameters);
     gpuErrchk(cudaEventRecord(stop));
     gpuErrchk(cudaEventSynchronize(stop));
