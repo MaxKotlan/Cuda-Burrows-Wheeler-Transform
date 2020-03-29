@@ -17,7 +17,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 
 int main(int argc, char** argv){
     std::vector<unsigned char> data;
-    for (auto c : "SIX.MIXED.PIXIES.SIFT.SIXTY.PIXI")
+    for (auto c : "SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIX")
         if (c != '\0')
             data.push_back(c);
 
