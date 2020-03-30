@@ -27,6 +27,7 @@ void CompareCpuAndKernel(std::string testdata){
     std::cout << std::endl;
     std::cout << "Gpu Version: " << std::endl;
     BWT_CUDA_BITONIC_SORT(data);
+    BWT_CUDA(data);
     std::cout << std::endl;
 }
 
@@ -35,5 +36,6 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
 
-
+    auto lotr = readFileIntoBuffer("lotr.txt");
+    BWT_CUDA(lotr);
 }

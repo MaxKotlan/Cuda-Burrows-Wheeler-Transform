@@ -1,6 +1,6 @@
 all: main test
 
 main: main.cpp
-	nvcc -o BWT main.cpp bwt_cpu.cpp bwt_cuda_bitonicsort.cu bwt_debug.cpp
+	nvcc -o BWT main.cpp bwt_cpu.cpp bwt_cuda_bitonicsort.cu bwt_cuda.cu bwt_debug.cpp
 test: test.cpp
-	nvcc -o TestBWT test.cpp bwt_cpu.cpp bwt_cuda_bitonicsort.cu bwt_debug.cpp
+	nvcc -o TestBWT test.cpp bwt_cpu.cpp bwt_cuda_bitonicsort.cu bwt_cuda.cu bwt_debug.cpp
