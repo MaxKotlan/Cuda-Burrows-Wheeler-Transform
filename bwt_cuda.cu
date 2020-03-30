@@ -72,23 +72,23 @@ __device__ void BitonicSort(KernelParameters parameters){
             if ((ixj)>i) {
                 if ((i&k)==0) {
                     bool shouldSwap = sortcomparetest(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize);
-                    __syncthreads();
+                    //__syncthreads();
                     if(shouldSwap){
                     //if (parameters.indices[i]>parameters.indices[ixj]) {
                     //if (atomicMax(&parameters.indices[i], parameters.indices[ixj]) == )
                         swap(parameters.indices[i], parameters.indices[ixj]);
                     }
-                    __syncthreads();
+                    //__syncthreads();
                 }
                 if ((i&k)!=0) {
                     /* Sort descending */
                     bool shouldSwap = sortcompare(parameters.indices[i], parameters.indices[ixj], parameters.input, parameters.datasize);
-                    __syncthreads();
+                    //__syncthreads();
                     if (shouldSwap){
                     //if (parameters.indices[i]<parameters.indices[ixj]) {
                         swap(parameters.indices[i], parameters.indices[ixj]); 
                     }
-                    __syncthreads();
+                    //__syncthreads();
                 }
             }   
             __syncthreads();
@@ -151,7 +151,7 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     KernelParameters parameters = { device_input, device_output, device_indices, k };
     
     gpuErrchk(cudaEventRecord(start));
-    unsigned int threadsperblock = 4;
+    unsigned int threadsperblock = 1024;
     Main_Kernel_BWT<<< k/threadsperblock+1, threadsperblock>>>(parameters);
     gpuErrchk(cudaEventRecord(stop));
     gpuErrchk(cudaEventSynchronize(stop));
