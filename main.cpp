@@ -28,7 +28,9 @@ void CompareCpuAndKernel(std::string testdata){
     std::cout << std::endl;
     std::cout << "Gpu Version: " << std::endl;
     BWT_CUDA_BITONIC_SORT(data);
-    BWT_CUDA(data);
+    auto r = BWT_CUDA(data);
+    for (auto c : r.data)
+        std::cout << c;
     std::cout << std::endl;
 }
 
@@ -37,19 +39,23 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
 
-    auto lotr = readFileIntoBuffer("lotr.txt");
+    auto lotr = readFileIntoBuffer("C:/Users/max/Downloads/PopcornTime-latest (2).exe");
     
     auto start = std::chrono::steady_clock::now();
-    BWT(lotr);
+    auto cu = BWT(lotr);
     auto end = std::chrono::steady_clock::now();
     std::cout << "CPU Elapsed time in milliseconds : " 
     << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
     << " ms" << std::endl;
     start = std::chrono::steady_clock::now();
-    BWT_CUDA(lotr);
+    auto cures = BWT_CUDA(lotr);
     end = std::chrono::steady_clock::now();
     std::cout << "GPU Elapsed time in milliseconds : " 
     << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
     << " ms" << std::endl;
+
+    for (int i = 0; i < lotr.size(); i++)
+        if (cures.data[i] != cu.data[i])
+            std::cout << "Data Diverges at " << i << std::endl; 
 
 }
