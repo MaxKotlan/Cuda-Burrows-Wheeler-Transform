@@ -64,7 +64,7 @@ __device__ void BitonicMerge(KernelParameters parameters) {
 }
 
 __device__ void BitonicSort(KernelParameters parameters){
-    unsigned int i = blockDim.x * blockIdx.x + threadIdx.x;
+    unsigned int i = /*blockDim.x * blockIdx.x +*/threadIdx.x;
 
     for (unsigned int k = 2; k <= parameters.datasize; k <<= 1){
         for (unsigned int j=k>>1; j>0; j=j>>1){
@@ -131,7 +131,7 @@ int isPowerOfTwo (unsigned int x)
    x == 2147483648);
 }
 
-TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
+TransformedData BWT_CUDA_BITONIC_SORT(const std::vector<unsigned char>& input){
     unsigned char* device_input = nullptr; unsigned char* device_output = nullptr; unsigned int* device_indices = nullptr;
     unsigned int k = input.size();
     assert(isPowerOfTwo(k));
@@ -151,7 +151,7 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& input){
     KernelParameters parameters = { device_input, device_output, device_indices, k };
     
     gpuErrchk(cudaEventRecord(start));
-    unsigned int threadsperblock = 1024;
+    unsigned int threadsperblock = k;
     Main_Kernel_BWT<<< k/threadsperblock+1, threadsperblock>>>(parameters);
     gpuErrchk(cudaEventRecord(stop));
     gpuErrchk(cudaEventSynchronize(stop));

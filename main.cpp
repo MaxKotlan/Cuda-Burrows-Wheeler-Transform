@@ -26,7 +26,7 @@ void CompareCpuAndKernel(std::string testdata){
         std::cout << c;
     std::cout << std::endl;
     std::cout << "Gpu Version: " << std::endl;
-    BWT_CUDA(data);
+    BWT_CUDA_BITONIC_SORT(data);
     std::cout << std::endl;
 }
 
@@ -34,4 +34,6 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("0123456789ABCDEF");
     CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
+
+
 }
