@@ -18,7 +18,7 @@ struct BWTCompare{
     unsigned int  input_size;
     unsigned char* input_device;
     __host__ __device__
-    bool operator()(const unsigned int& a, const unsigned int& b) const{
+    bool operator()(unsigned int a, unsigned int b) const{
         unsigned char diffa = 0; unsigned char diffb = 0;
         for (int i = 0; i < input_size && diffa == diffb; i++){
             unsigned int la = i-a+input_size;
@@ -73,6 +73,5 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& data){
         std::cout << c;
     std::cout << std::endl;
 
-
-    return result;
+    return std::move(result);
 }
