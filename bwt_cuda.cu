@@ -64,14 +64,10 @@ TransformedData BWT_CUDA(const std::vector<unsigned char>& data){
         thrust::raw_pointer_cast(indices.data()),
         k
     };
-    unsigned int threadsperblock = 1024;
+    unsigned int threadsperblock = 256;
     IndiciesToTransform<<< k/threadsperblock+1, threadsperblock>>>(parameters);
     
     thrust::copy(output.begin(), output.end(), result.data.begin());
-
-    for (auto c: result.data)
-        std::cout << c;
-    std::cout << std::endl;
 
     return std::move(result);
 }

@@ -36,10 +36,6 @@ TransformedData BWT(const std::vector<unsigned char>& data){
         return diffa < diffb;
     });
 
-    for (auto c: sortedindex)
-        std::cout << c << " ";
-    std::cout << std::endl;
-
     /*Find Original Index and Copy to Output Buffer*/
     for (unsigned int i = 0; i < k; i++){
         unsigned int r = sortedindex[i];

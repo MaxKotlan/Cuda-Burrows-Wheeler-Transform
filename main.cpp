@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <time.h>
+#include <chrono>
 #include "bwt.h"
 
 std::vector<unsigned char> readFileIntoBuffer(std::string filename){
@@ -37,5 +38,18 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
 
     auto lotr = readFileIntoBuffer("lotr.txt");
+    
+    auto start = std::chrono::steady_clock::now();
+    BWT(lotr);
+    auto end = std::chrono::steady_clock::now();
+    std::cout << "CPU Elapsed time in milliseconds : " 
+    << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+    << " ms" << std::endl;
+    start = std::chrono::steady_clock::now();
     BWT_CUDA(lotr);
+    end = std::chrono::steady_clock::now();
+    std::cout << "GPU Elapsed time in milliseconds : " 
+    << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+    << " ms" << std::endl;
+
 }
