@@ -17,7 +17,27 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 		fseek(file, 0, SEEK_SET);
         std::vector<unsigned char> buffer(length);
 		fread(buffer.data(), buffer.size(), 1, file);
+        fclose(file);
         return std::move(buffer);
+}
+
+void saveBufferToFile(std::string filename, TransformedData& transformed){
+        filename+=".transformed";
+    	FILE* file = fopen(filename.c_str(), "wb");
+        if (!file) {
+            std::cout << "Could not open " << filename << std::endl;
+            exit(0);
+        }
+		fseek(file, 0, SEEK_SET);
+        std::vector<unsigned char> fileheader(8);
+		fileheader[0] = 0xC2; fileheader[1] = 0xB3; fileheader[2] = 0x23; fileheader[3] = 0x12;
+		std::copy(static_cast<const unsigned char*>(static_cast<const void*>(&transformed.originalIndex)),
+			static_cast<const unsigned char*>(static_cast<const void*>(&transformed.originalIndex)) + sizeof(transformed.originalIndex),
+			&fileheader[4]);
+
+        fwrite(fileheader.data(), fileheader.size(), 1, file);
+        fwrite(transformed.data.data(), transformed.data.size(), 1, file);
+        fclose(file);
 }
 
 TransformedData Transform(std::vector<unsigned char> &originaldata, std::string device){
@@ -44,6 +64,7 @@ int main(int argc, char** argv){
     }
 
     TransformedData d = Transform(readFileIntoBuffer(argv[1]), settings.device);
+    saveBufferToFile(argv[1], d);
     
     if (settings.print){
         for (auto b : d.data){
