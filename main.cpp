@@ -22,6 +22,18 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
         return std::move(buffer);
 }
 
+void saveBufferToFile(std::string filename, std::vector<unsigned char>& buffer){
+    	FILE* file = fopen(filename.c_str(), "w+b");
+        if (!file) {
+            std::cout << "Could not open " << filename << std::endl;
+            exit(0);
+        }
+		fseek(file, 0, SEEK_SET);
+        fwrite(buffer.data(), buffer.size(), 1, file);
+        fclose(file);
+
+}
+
 void saveBufferToFile(std::string filename, TransformedData& transformed){
         filename+=".transformed";
     	FILE* file = fopen(filename.c_str(), "w+b");
@@ -91,6 +103,7 @@ int main(int argc, char** argv){
         std::memcpy(transformedData.data.data(), k.data()+8, transformedData.data.size());
         std::vector<unsigned char> inverse = INVERSE_BWT(transformedData);
         
+        saveBufferToFile(std::string(argv[1]).substr(0, std::string(argv[1]).find(".transformed")), inverse);
         if (settings.print){
             for (auto b : inverse)
                 std::cout << b;
