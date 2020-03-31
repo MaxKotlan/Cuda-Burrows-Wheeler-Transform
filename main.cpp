@@ -54,8 +54,12 @@ int main(int argc, char** argv){
     << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
     << " ms" << std::endl;
 
-    for (int i = 0; i < lotr.size(); i++)
-        if (cures.data[i] != cu.data[i])
-            std::cout << "Data Diverges at " << i << std::endl; 
+    for (auto c : INVERSE_BWT(cures))
+        std::cout << c;
+
+    //for (int i = 0; i < lotr.size(); i++)
+    //    std::cout << cures.data[i];
+    //    if (cures.data[i] != cu.data[i])
+    //        std::cout << "Data Diverges at " << i << std::endl; 
 
 }

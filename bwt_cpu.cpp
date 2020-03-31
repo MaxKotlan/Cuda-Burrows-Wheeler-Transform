@@ -27,7 +27,7 @@ TransformedData BWT(const std::vector<unsigned char>& data){
     /*sort row indicies by 'row' (inplace row calculation) lexicographically*/
     std::sort(sortedindex.begin(), sortedindex.end(), [&](unsigned int a, unsigned int b){
         unsigned char diffa = 0; unsigned char diffb = 0;
-        for (int i = 0; i < k && diffa == diffb; i++){
+        for (int i = 0; (i < (k - a) || i < (k - b)) && diffa == diffb; i++){
             unsigned int la = i-a+k;
             unsigned int lb = i-b+k;
             diffa = data[(la)%(k)];
@@ -63,12 +63,13 @@ std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
             return resa < resb;
         });
 
+/*
         for (int h = 0; h < k; h++) {
             for (int p = 0; p <= i; p++)
                 std::cout << original[h][p] << " ";//<< transformdata.data[original[h][p]] << " ";
             std::cout << std::endl;
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
 
     }
 
