@@ -63,13 +63,37 @@ int main(int argc, char** argv){
         if (std::string(argv[i]) == std::string("--print")) settings.print  = true;
     }
 
-    TransformedData d = Transform(readFileIntoBuffer(argv[1]), settings.device);
-    saveBufferToFile(argv[1], d);
-    
-    if (settings.print){
-        for (auto b : d.data){
-            std::cout << b;
+    if (std::string(argv[1]).find(".transformed") == std::string::npos) {
+
+        TransformedData d = Transform(readFileIntoBuffer(argv[1]), settings.device);
+        saveBufferToFile(argv[1], d);
+        
+        if (settings.print){
+            for (auto b : d.data)
+                std::cout << b;
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
+
+    } else {
+        const unsigned int MAGIC_BYTE = 0x1223B3C2;
+        unsigned int MAGIC_BYTE_FROM_FILE;
+        TransformedData transformedData;
+        std::vector<unsigned char> k = readFileIntoBuffer(argv[1]);
+        transformedData.data = std::move(std::vector<unsigned char>(k.size() - 8));
+        std::memcpy(&MAGIC_BYTE_FROM_FILE,   k.data(), sizeof(unsigned int));
+        if (MAGIC_BYTE != MAGIC_BYTE_FROM_FILE){
+            std::cout << "Error: Magic Byte Does Not Match" << std::endl;
+            exit(-1);
+        }
+        std::memcpy(&transformedData.originalIndex, k.data()+4, sizeof(unsigned int));
+        std::memcpy(transformedData.data.data(), k.data()+8, transformedData.data.size());
+        std::vector<unsigned char> inverse = INVERSE_BWT(transformedData);
+        
+        if (settings.print){
+            for (auto b : inverse)
+                std::cout << b;
+            std::cout << std::endl;
+        }
+
     }
 }
