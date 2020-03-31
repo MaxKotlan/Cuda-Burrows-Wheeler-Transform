@@ -21,7 +21,7 @@ struct BWTCompare{
     bool operator()(unsigned int a, unsigned int b) const{
         unsigned char diffa = 0; unsigned char diffb = 0;
         
-        for (int i = 0; i < input_size/4 && diffa == diffb; i++){
+        for (int i = 0; (i < (input_size - a) || i < (input_size - b)) && diffa == diffb; i++){
             unsigned int la = i-a+input_size;
             unsigned int lb = i-b+input_size;
             diffa = input_device[(la)%(input_size)];

@@ -39,7 +39,7 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
 
-    auto lotr = readFileIntoBuffer("C:/Users/max/Downloads/PopcornTime-latest (2).exe");
+    auto lotr = readFileIntoBuffer("lotr.txt");
     
     auto start = std::chrono::steady_clock::now();
     auto cu = BWT(lotr);
