@@ -74,13 +74,12 @@ std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
     }
 
     for (int j = 0; j < original.size(); j++){
-        std::cout << j << ": ";
+        //std::cout << j << ": ";
         for(int c = 0; c < original.size(); c++){
-            std::cout << transformdata.data[original[j][c]];
             if (transformdata.originalIndex ==  j)
             data[original.size()-1 - c] = transformdata.data[original[j][c]];
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
 
     return data;

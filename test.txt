@@ -1,0 +1,8 @@
+It would be useful to see a complete, compilable reproducer code. However you're probably running into memory fragmentation.
+
+Even though a large amount of memory may be reported as being free, it's possible that it can't be allocated in a single large contiguous chunk. This fragmentation will then limit the maximum size of a single allocation that you can request.
+
+It's probably not really a question of how you are freeing memory, but more a function of what overhead allocations remain after you free the memory. The fact that you are checking the mem info and getting a large number back says to me that you are freeing your allocations correctly.
+
+To try to work around this, one approach would be to manage and re-use your allocations carefully. For instance, if you need a large 2.4G working device vector of float on the device, then allocate that once, and re-use it for successive operations. Also, if you have any remaining allocations on the device immediately before you are trying to re-allocate the 2.4G vector, then try freeing those (i.e. free all allocations you have made on the device) before trying to re-allocate the 2.4G vector.
+

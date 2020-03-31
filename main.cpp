@@ -39,7 +39,7 @@ int main(int argc, char** argv){
     CompareCpuAndKernel("SIX.MIXED.PIXIES.SIFT.MIXED.PIXISIX.MIXED.PIXIES.SIFT.MIXED.PIXI");
     CompareCpuAndKernel("There are laboratory tests that can identify the virus that caus");
 
-    auto lotr = readFileIntoBuffer("lotr.txt");
+    auto lotr = readFileIntoBuffer("test.txt");
     
     auto start = std::chrono::steady_clock::now();
     auto cu = BWT(lotr);
@@ -54,12 +54,15 @@ int main(int argc, char** argv){
     << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
     << " ms" << std::endl;
 
+    std::cout << "cpu: " << cu.originalIndex << " gpu: " << cures.originalIndex << std::endl;
+
+
+    for (int i = 0; i < lotr.size(); i++)
+        if (cures.data[i] != cu.data[i])
+            std::cout << "Data Diverges at " << i << std::endl; 
+
     for (auto c : INVERSE_BWT(cures))
         std::cout << c;
 
-    //for (int i = 0; i < lotr.size(); i++)
-    //    std::cout << cures.data[i];
-    //    if (cures.data[i] != cu.data[i])
-    //        std::cout << "Data Diverges at " << i << std::endl; 
 
 }
