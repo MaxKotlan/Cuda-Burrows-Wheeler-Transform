@@ -4,6 +4,7 @@
 #include <fstream>
 #include <time.h>
 #include <chrono>
+#include <cstring>
 #include "bwt.h"
 
 std::vector<unsigned char> readFileIntoBuffer(std::string filename){
@@ -13,7 +14,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
             exit(0);
         }
         fseek(file, 0, SEEK_END);
-		int length = ftell(file)+1;
+		int length = ftell(file);
 		fseek(file, 0, SEEK_SET);
         std::vector<unsigned char> buffer(length);
 		fread(buffer.data(), buffer.size(), 1, file);
@@ -65,7 +66,8 @@ int main(int argc, char** argv){
 
     if (std::string(argv[1]).find(".transformed") == std::string::npos) {
 
-        TransformedData d = Transform(readFileIntoBuffer(argv[1]), settings.device);
+        auto inputdata = readFileIntoBuffer(argv[1]);
+        TransformedData d = Transform(inputdata, settings.device);
         saveBufferToFile(argv[1], d);
         
         if (settings.print){
