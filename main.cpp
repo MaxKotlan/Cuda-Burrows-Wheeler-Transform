@@ -23,7 +23,7 @@ std::vector<unsigned char> readFileIntoBuffer(std::string filename){
 
 void saveBufferToFile(std::string filename, TransformedData& transformed){
         filename+=".transformed";
-    	FILE* file = fopen(filename.c_str(), "wb");
+    	FILE* file = fopen(filename.c_str(), "w+b");
         if (!file) {
             std::cout << "Could not open " << filename << std::endl;
             exit(0);
