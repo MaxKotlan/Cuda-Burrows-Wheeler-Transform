@@ -13,7 +13,11 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=t
    }
 }
 
-
+/*
+This is the custom compare function used for sorting the indicies.
+It relies on a device pointer to the input byte array, even though
+it is being used to sort the indicies array.
+*/
 struct BWTCompare{
     unsigned int  input_size;
     unsigned char* input_device;
