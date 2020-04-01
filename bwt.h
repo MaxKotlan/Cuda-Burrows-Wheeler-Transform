@@ -17,6 +17,8 @@ struct TransformedData{
         return *this;
     }
 };
+
+#include "string_adapter.h"
 #include "bwt_cpu.h"
 #include "bwt_cuda.h"
 #endif

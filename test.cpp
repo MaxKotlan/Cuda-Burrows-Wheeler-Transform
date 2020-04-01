@@ -1,6 +1,7 @@
 #include "bwt.h"
 #include "bwt_debug.h"
 #include <assert.h>
+#include <algorithm>  
 
 void Test(std::string input, std::string assertoutput, std::string resource){
     std::cout << std::endl;
@@ -24,6 +25,9 @@ void testRandom(unsigned int size){
     PrintUnsortedMatrix(data);
     std::cout << std::endl;
     PrintSortedMatrix(data);
+
+
+ //   auto tes = INVERSE_BWT(BWT("BANNANA"));
 }
 
 int main(){
@@ -44,5 +48,10 @@ int main(){
     auto k = INVERSE_BWT(BWT("SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES"));
     for (auto c : k)
         std::cout << c;
+
+    BWT(toByteArray("hello&World"));
+    for (auto e : BWT(toByteArray("hello&World")).data){
+        std::cout << e;
+    }
 
 }
