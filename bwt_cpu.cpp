@@ -50,6 +50,10 @@ std::vector<unsigned char> INVERSE_BWT(const TransformedData &transformdata){
     unsigned int k = transformdata.data.size();
     std::vector<std::vector<int>> original(k);
     std::vector<unsigned char> data(k);
+
+    for (int i = 0; i < k; i++)
+        original[i].reserve(k);
+
     for (int i = 0; i < k; i++){
         for (int p = 0; p < k; p++)
             original[p].push_back(p);
