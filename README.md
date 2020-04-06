@@ -22,5 +22,7 @@ The program will automatically know whether to perform a file transformation or 
 
 ## Testing Transformation With Cuda Acceleration
 A 3.2  MB text file of Lord of the Rings 110 milliseconds
+
 A 151 MB video file only took 11.284 seconds to transform. 
+
 A 201 MB binary executable took 1 hour and 6 minutes to transform. 
